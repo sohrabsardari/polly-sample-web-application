@@ -9,11 +9,14 @@ public class PollyDecorator : IService
     private readonly AsyncPolicyWrap _policyWrap;
     private readonly IService _service;
     public PollyDecorator(IService service, ICircuitBreakerRegistry circuitBreakerRegistry
-        , ITimeoutPolicyRegistry timeoutPolicyRegistry)
+        , ITimeoutPolicyRegistry timeoutPolicyRegistry, IBulkHeadRegistry bulkHeadRegistry)
     {
         _service = service;
         var serviceName = _service.GetType().ToString();
-        _policyWrap = Policy.WrapAsync(circuitBreakerRegistry.GetPolicyFor(serviceName), timeoutPolicyRegistry.GetPolicyFor(serviceName));
+        _policyWrap = Policy.WrapAsync(
+            circuitBreakerRegistry.GetPolicyFor(serviceName),
+            bulkHeadRegistry.GetPolicyFor(serviceName),
+            timeoutPolicyRegistry.GetPolicyFor(serviceName));
     }
 
     public async Task<string> Get()
