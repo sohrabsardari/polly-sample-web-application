@@ -50,7 +50,6 @@ public class Startup
 
     public void ConfigureContainer(ContainerBuilder builder)
     {
-        var ass = Assembly.GetExecutingAssembly();
         builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
             .Where(a => typeof(IService).IsAssignableFrom(a) && !a.Name.Contains("Decorator"))
             .AsImplementedInterfaces()
